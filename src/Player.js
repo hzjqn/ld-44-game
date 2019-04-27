@@ -31,7 +31,7 @@ export default class Player {
                 horizontal: gamepads[0]['axes'][0],
                 vertical: gamepads[0]['axes'][1]
             }
-        } // else { keyboard support }
+        } // else { controls.movement = keyboard support }
 
         console.log(controls)
 
