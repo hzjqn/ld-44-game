@@ -1,3 +1,5 @@
+import { runInThisContext } from "vm";
+
 export default class Player {
     // Hay un par de variables para jugar mas adelante
     constructor(position = {x: 0, y: 0}, stats = {}) {
@@ -46,18 +48,11 @@ export default class Player {
     }
 
     lookAt() {
-        
-        if (Math.abs(this.controls.lookingAt.horizontal) > 0.2) {
-            this.lookingAtIndicator.x = this.position.x + (8 * Math.abs(this.controls.lookingAt.horizontal) / this.controls.lookingAt.horizontal) + this.controls.lookingAt.horizontal * 8;
-        } else {                
-            this.lookingAtIndicator.x = this.position.x + (8 * Math.abs(this.controls.lookingAt.horizontal) / this.controls.lookingAt.horizontal);
-        }
-        
-        if (Math.abs(this.controls.lookingAt.vertical) > 0.2) {
-            this.lookingAtIndicator.y  = this.position.y + (8 * Math.abs(this.controls.lookingAt.vertical) / this.controls.lookingAt.vertical) + this.controls.lookingAt.vertical * 8;
-        } else {                
-            this.lookingAtIndicator.y = this.position.y + (8 * Math.abs(this.controls.lookingAt.vertical) / this.controls.lookingAt.vertical);
-        }
+        let x;
+        let y;
+
+        this.lookingAtIndicator.position.x = this.position.x - this.lookingAtIndicator.width / 2;
+        this.lookingAtIndicator.position.y = this.position.y - this.lookingAtIndicator.height / 2;
     }
 
     move() {
@@ -85,8 +80,8 @@ export default class Player {
     }
 
     render () {
-        this.sprite.x = this.position.x;
-        this.sprite.y = this.position.y;
+        this.sprite.x = this.position.x - this.sprite.width / 2;
+        this.sprite.y = this.position.y - this.sprite.height / 2;
     }
     
     update (delta) { 

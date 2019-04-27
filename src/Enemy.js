@@ -35,7 +35,6 @@ export default class Enemy {
     }
 
     updatePosition() {
-        console.log(this.position.y)
         if(this.position.y > 200){
             this.position.y = 0
         }
