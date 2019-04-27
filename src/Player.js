@@ -1,5 +1,3 @@
-import 'pixi.js';
-
 export default class Player {
     // Hay un par de variables para jugar mas adelante
     constructor(position = {x: 0, y: 0}, stats = {}) {
@@ -8,7 +6,9 @@ export default class Player {
         this.position = {
             x: position.x,
             y: position.y
-       };        
+        };
+        this.sprite.x = this.position.x;
+        this.sprite.y = this.position.y;        
     }
 
     setup (app) {
@@ -33,18 +33,20 @@ export default class Player {
             }
         } // else { controls.movement = keyboard support }
 
-        console.log(controls)
-
         return controls;
     }
-    
-    update (delta) { 
-        this.controls = this.updateControls();
+
+    updatePosition() {
         if(this.controls){
             // le pongo un minimo de 0.2 porque si no el control tiene como saltitos, porque mueve 0.1 el stick por el mismo peso del mecanismo. 
             this.sprite.x += Math.abs(this.controls.movement.horizontal) > 0.2 ? this.controls.movement.horizontal * 10 : 0;
             this.sprite.y += Math.abs(this.controls.movement.vertical) > 0.2 ? this.controls.movement.vertical * 10 : 0;
         }
+    }
+    
+    update (delta) { 
+        this.controls = this.updateControls();
+        this.updatePosition();
     }
 
 }
