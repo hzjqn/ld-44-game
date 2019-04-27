@@ -15,15 +15,33 @@ export default class Player {
     }
 
     updateControls() {
-        this.controls = navigator.getGamepads();
+        // Probablemente querramos agregar keyboard support asique dejo esta funcion para future proofing
+        let gamepads = navigator.getGamepads();
+        let controls = {
+            movement: {
+                horizontal: 0,
+                vertical: 0
+            }
+        }
+
+        if(gamepads[0]) {
+            controls.movement = {
+                ... controls.movement,
+                horizontal: gamepads[0]['axes'][0],
+                vertical: gamepads[0]['axes'][1]
+            }
+        } // else { keyboard support }
+
+        console.log(controls)
+
+        return controls;
     }
     
     update (delta) { 
-        this.updateControls();
-
-        if(this.controls[0]){
-            this.sprite.x += Math.abs(this.controls[0]['axes'][0]) > 0.2 ? this.controls[0]['axes'][0] * 10 : 0;
-            this.sprite.y += Math.abs(this.controls[0]['axes'][1]) > 0.2 ? this.controls[0]['axes'][1] * 10 : 0;
+        this.controls = this.updateControls();
+        if(this.controls){
+            this.sprite.x += Math.abs(this.controls.movement.horizontal) > 0.2 ? this.controls.movement.horizontal * 10 : 0;
+            this.sprite.y += Math.abs(this.controls.movement.vertical) > 0.2 ? this.controls.movement.vertical * 10 : 0;
         }
     }
 
