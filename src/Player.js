@@ -3,7 +3,18 @@ import { runInThisContext } from "vm";
 export default class Player {
     // Hay un par de variables para jugar mas adelante
     constructor(position = {x: 0, y: 0}, stats = {}) {
-        this.controls = navigator.getGamepads();
+        this.controls = {
+            movement: {
+                horizontal: 0,
+                vertical: 0
+            },
+            lookingAt: {
+                horizontal: 0,
+                vertical: 0,
+            },
+            attack: false,
+            spAttack: false,
+        }
         this.sprite = new PIXI.Sprite(PIXI.loader.resources["player_body"].texture);
         this.lookingAtIndicator = new PIXI.Sprite(PIXI.loader.resources["player_looking_at_indicator"].texture);
         this.position = {
@@ -26,21 +37,29 @@ export default class Player {
             movement: {
                 horizontal: 0,
                 vertical: 0
-            }
+            },
+            lookingAt: {
+                horizontal: 0,
+                vertical: 0,
+            },
+            attack: false,
+            spAttack: false,
         }
 
         if(gamepads[0]) {
             controls = {
                 movement: {
-                ... controls.movement,
-                horizontal: gamepads[0]['axes'][0],
-                vertical: gamepads[0]['axes'][1]
+                    ... controls.movement,
+                    horizontal: gamepads[0]['axes'][0],
+                    vertical: gamepads[0]['axes'][1]
                 },
                 lookingAt: {
                     ... controls.lookingAt,
                     horizontal: gamepads[0]['axes'][2],
                     vertical: gamepads[0]['axes'][3]
-                }
+                },
+                attack: (Math.abs(gamepads[0]['axes'][2]) > .5 ? true : false) || (Math.abs(gamepads[0]['axes'][3]) > .5 ? true : false),
+                spAttack: gamepads[0]['buttons'][7].value,
             }
         } // else { controls.movement = keyboard support }
 
@@ -48,7 +67,6 @@ export default class Player {
     }
 
     lookAt() {
-
         console.log(this.position.y)
     }
 
@@ -57,15 +75,18 @@ export default class Player {
     }
 
     attack () {
-
+        if(this.controls.attack){
+            console.log('attack');
+        }
     }
 
     spAttack () {
-
+        if(this.controls.spAttack){
+            console.log('spAttack')
+        }
     }
 
     takeDamage () {
-
     }
 
     updatePosition() {
@@ -81,14 +102,16 @@ export default class Player {
         this.sprite.y = this.position.y - this.sprite.height / 2;
 
         
-        this.lookingAtIndicator.position.x = this.position.x - this.lookingAtIndicator.width / 2 + 16 * this.controls.lookingAt.horizontal / Math.abs(this.controls.lookingAt.horizontal) + this.controls.lookingAt.horizontal * 16;
-        this.lookingAtIndicator.position.y = this.position.y - this.lookingAtIndicator.height / 2 + 16 * this.controls.lookingAt.vertical / Math.abs(this.controls.lookingAt.vertical) + this.controls.lookingAt.vertical * 16;
+        this.lookingAtIndicator.position.x = this.position.x - this.lookingAtIndicator.width / 2 + this.controls.lookingAt.horizontal * 16;
+        this.lookingAtIndicator.position.y = this.position.y - this.lookingAtIndicator.height / 2 +  this.controls.lookingAt.vertical * 16;
     }
     
     update (delta) { 
         this.controls = this.updateControls();
         this.lookAt();
         this.move();
+        this.attack();
+        this.spAttack();
         this.render();
     }
 

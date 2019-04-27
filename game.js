@@ -2,6 +2,25 @@ import 'pixi.js';
 import Player from './src/Player';
 import Enemy from './src/Enemy';
 
+window.__CONTROLLER_ENABLED__ = false;
+
+const navbar = document.createElement('nav');
+const controller_indicator = document.createElement('span');
+controller_indicator.html = window.__CONTROLLER_ENABLED__? 'controller enabled' : 'controller disabled'
+const controller_button = document.createElement('button');
+navbar.append(controller_button);
+navbar.append(controller_indicator);
+document.body.append(navbar);
+
+
+controller_button.addEventListener('click', () => {
+    if (window.__CONTROLLER_ENABLED__) {
+        window.__CONTROLLER_ENABLED__ = false;
+    } else {
+        window.__CONTROLLER_ENABLED__ = true;
+    }
+})
+
 // The application will create a renderer using WebGL, if possible,
 // with a fallback to a canvas render. It will also setup the ticker
 // and the root stage PIXI.Container

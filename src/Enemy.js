@@ -31,7 +31,9 @@ export default class Enemy {
     }
 
     spAttack () {
+    }
 
+    takeDamage () {
     }
 
     updatePosition() {
