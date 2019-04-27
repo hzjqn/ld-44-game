@@ -1,6 +1,7 @@
 import 'pixi.js';
 
 export default class Player {
+    // Hay un par de variables para jugar mas adelante
     constructor(position = {x: 0, y: 0}, stats = {}) {
         this.controls = navigator.getGamepads();
         this.sprite = new PIXI.Sprite(PIXI.loader.resources["player_body"].texture);
@@ -40,6 +41,7 @@ export default class Player {
     update (delta) { 
         this.controls = this.updateControls();
         if(this.controls){
+            // le pongo un minimo de 0.2 porque si no el control tiene como saltitos, porque mueve 0.1 el stick por el mismo peso del mecanismo. 
             this.sprite.x += Math.abs(this.controls.movement.horizontal) > 0.2 ? this.controls.movement.horizontal * 10 : 0;
             this.sprite.y += Math.abs(this.controls.movement.vertical) > 0.2 ? this.controls.movement.vertical * 10 : 0;
         }
