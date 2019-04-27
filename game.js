@@ -27,8 +27,8 @@ controller_button.addEventListener('click', () => {
 PIXI.utils.skipHello();
 
 const app = new PIXI.Application({
-    width: window.innerWidth,
-    height: window.innerHeight
+    width: window.innerWidth / 3 * 2,
+    height: window.innerHeight / 3 * 2
 });
 
 // The application will create a canvas element for you that you
@@ -41,6 +41,7 @@ let enemies;
 
 PIXI.loader
     .add('player_body','./assets/img/player_body.png')
+    .add('player_health_bar', './assets/img/player_health_bar.png')
     .add('enemy_body', './assets/img/enemy_body.png')
     .add('player_looking_at_indicator', './assets/img/player_looking_at_indicator.png')
     .load(setup);

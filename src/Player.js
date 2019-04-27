@@ -3,6 +3,11 @@ import { runInThisContext } from "vm";
 export default class Player {
     // Hay un par de variables para jugar mas adelante
     constructor(position = {x: 0, y: 0}, stats = {}) {
+        this.stats = {
+            health: 100,
+            maxHealth: 100,
+            attackCD: 0,
+        };
         this.controls = {
             movement: {
                 horizontal: 0,
@@ -16,23 +21,30 @@ export default class Player {
             spAttack: false,
         }
         this.sprite = new PIXI.Sprite(PIXI.loader.resources["player_body"].texture);
+        this.healtBar = new PIXI.Sprite(PIXI.loader.resources["player_health_bar"].texture);
         this.lookingAtIndicator = new PIXI.Sprite(PIXI.loader.resources["player_looking_at_indicator"].texture);
         this.position = {
             x: position.x,
             y: position.y
         };
+
+        this.healtBar.position.x = window.innerWidth / 3 * 2 / 2 - this.healtBar.width / 2;
+        this.healtBar.position.y = window.innerHeight / 3 * 2 - this.healtBar.height * 2;
+
         this.sprite.x = this.position.x;
         this.sprite.y = this.position.y;        
     }
 
     setup (app) {
         app.stage.addChild(this.sprite);
+        app.stage.addChild(this.healtBar);
         app.stage.addChild(this.lookingAtIndicator);
     }
 
     updateControls() {
         // Probablemente querramos agregar keyboard support asique dejo esta funcion para future proofing
         let gamepads = navigator.getGamepads();
+        let attackStickTreshold = .9;
         let controls = {
             movement: {
                 horizontal: 0,
@@ -58,8 +70,8 @@ export default class Player {
                     horizontal: gamepads[0]['axes'][2],
                     vertical: gamepads[0]['axes'][3]
                 },
-                attack: (Math.abs(gamepads[0]['axes'][2]) > .5 ? true : false) || (Math.abs(gamepads[0]['axes'][3]) > .5 ? true : false),
-                spAttack: gamepads[0]['buttons'][7].value,
+                attack: gamepads[0]['buttons'][7].pressed,
+                spAttack: gamepads[0]['buttons'][6].pressed,
             }
         } // else { controls.movement = keyboard support }
 
@@ -75,14 +87,23 @@ export default class Player {
     }
 
     attack () {
-        if(this.controls.attack){
+        if(this.controls.attack && this.stats.attackCD === 0){
             console.log('attack');
+            this.stats.health -= 1;
+            this.stats.attackCD = 10;
+        }
+
+        this.stats.attackCD -= 1;
+
+        if(this.stats.attackCD < 0){
+            this.stats.attackCD = 0;
         }
     }
 
     spAttack () {
         if(this.controls.spAttack){
             console.log('spAttack')
+            this.stats.health -= 1;
         }
     }
 
@@ -101,6 +122,7 @@ export default class Player {
         this.sprite.x = this.position.x - this.sprite.width / 2;
         this.sprite.y = this.position.y - this.sprite.height / 2;
 
+        this.healtBar.width = this.healtBar.width * this.stats.health / this.healtBar.width
         
         this.lookingAtIndicator.position.x = this.position.x - this.lookingAtIndicator.width / 2 + this.controls.lookingAt.horizontal * 16;
         this.lookingAtIndicator.position.y = this.position.y - this.lookingAtIndicator.height / 2 +  this.controls.lookingAt.vertical * 16;
