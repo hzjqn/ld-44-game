@@ -48,11 +48,8 @@ export default class Player {
     }
 
     lookAt() {
-        let x;
-        let y;
 
-        this.lookingAtIndicator.position.x = this.position.x - this.lookingAtIndicator.width / 2;
-        this.lookingAtIndicator.position.y = this.position.y - this.lookingAtIndicator.height / 2;
+        console.log(this.position.y)
     }
 
     move() {
@@ -82,6 +79,10 @@ export default class Player {
     render () {
         this.sprite.x = this.position.x - this.sprite.width / 2;
         this.sprite.y = this.position.y - this.sprite.height / 2;
+
+        
+        this.lookingAtIndicator.position.x = this.position.x - this.lookingAtIndicator.width / 2 + 16 * this.controls.lookingAt.horizontal / Math.abs(this.controls.lookingAt.horizontal) + this.controls.lookingAt.horizontal * 16;
+        this.lookingAtIndicator.position.y = this.position.y - this.lookingAtIndicator.height / 2 + 16 * this.controls.lookingAt.vertical / Math.abs(this.controls.lookingAt.vertical) + this.controls.lookingAt.vertical * 16;
     }
     
     update (delta) { 
