@@ -19,9 +19,11 @@ document.body.appendChild(app.view);
 
 let player;
 let enemies;
+
 PIXI.loader
     .add('player_body','./assets/img/player_body.png')
     .add('enemy_body', './assets/img/enemy_body.png')
+    .add('player_looking_at_indicator', './assets/img/player_looking_at_indicator.png')
     .load(setup);
 
 function setup() {

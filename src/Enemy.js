@@ -16,11 +16,29 @@ export default class Enemy {
         app.stage.addChild(this.sprite);
     }
     
-    update (delta) { 
-        this.updatePosition(delta);
+    update () {
+        this.move();
+        this.attack();
+        this.spAttack();
     }
     
-    updatePosition(delta) {
+    move () {
+        this.updatePosition();
+    }
+
+    attack () {
+
+    }
+
+    spAttack () {
+
+    }
+
+    updatePosition() {
+        console.log(this.position.y)
+        if(this.position.y > 200){
+            this.position.y = 0
+        }
         this.position.y += 1;
         this.sprite.y = this.position.y;
     }
